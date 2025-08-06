@@ -5,11 +5,11 @@ import (
 )
 
 type User struct {
-	Firstname string
-	Lastname  string
-	Email     string
-	Debt      float64
-	Credit    float64
+	Firstname string  `json:"firstname"`
+	Lastname  string  `json:"lastname"`
+	Email     string  `json:"email"`
+	Debt      float64 `json:"debt"`
+	Credit    float64 `json:"credit"`
 }
 
 type Metadata struct {

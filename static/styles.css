@@ -10,7 +10,50 @@ body {
   height: 100vh;
 }
 
+.login-container {
+  background-color: #1e1e1e;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #000000;
+  width: 300px;
+}
+
 h1 {
-  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+button {
+  padding: 0.75rem;
+  background-color: #03dac6;
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00cbb3;
+}
+
+#login-error {
+  color: #ff6b6b;
+  text-align: center;
+  margin-top: 0.5rem;
 }
 

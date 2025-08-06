@@ -1,0 +1,6 @@
+env: development
+
+development:
+  driver: postgres
+  open: user=split password=split dbname=split sslmode=disable
+

@@ -10,6 +10,7 @@ type User struct {
 	Email     string  `json:"email"`
 	Debt      float64 `json:"debt"`
 	Credit    float64 `json:"credit"`
+	Password  string  `json:"password"`
 }
 
 type Metadata struct {

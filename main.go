@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -22,29 +21,62 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	var firstName, lastName string
+	var password string
 
-	row := db.QueryRow("SELECT first_name, last_name FROM users WHERE email = $1;", user.Email)
+	row := db.QueryRow("SELECT password FROM users WHERE email = $1;", user.Email)
 
-	err = row.Scan(&firstName, &lastName)
+	err = row.Scan(&password)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	fmt.Println(firstName, lastName, "Logged in succesffully!")
-
-	err = json.NewEncoder(w).Encode(map[string]string{"message": "Welcome to your dashboard"})
-	if err != nil {
-		log.Println(err)
+	if password != user.Password {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		err = json.NewEncoder(w).Encode(map[string]string{"message": "User not found!"})
+		if err != nil {
+			log.Println(err)
+		}
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
+	err = json.NewEncoder(w).Encode(map[string]string{"message": "Welcome to your dashboard"})
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func Register(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./static/register.html")
+}
+
+func Signup(w http.ResponseWriter, r *http.Request) {
+	var user *User
+
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		log.Println(err)
+	}
+
+	_, err = db.Exec("INSERT INTO users (first_name, last_name, email, password) VALUES ($1,$2,$3,$4)", user.Firstname, user.Lastname, user.Email, user.Password)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted)
+
+	err = json.NewEncoder(w).Encode(map[string]string{"message": "Registration successful"})
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func main() {
-
 	var err error
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
@@ -60,6 +92,8 @@ func main() {
 
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/login", Login)
+	http.HandleFunc("/register", Register)
+	http.HandleFunc("/signup", Signup)
 
 	s := &http.Server{
 		Addr:         ":8080",

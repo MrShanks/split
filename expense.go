@@ -4,15 +4,6 @@ import (
 	"time"
 )
 
-type User struct {
-	Firstname string  `json:"firstname"`
-	Lastname  string  `json:"lastname"`
-	Email     string  `json:"email"`
-	Debt      float64 `json:"debt"`
-	Credit    float64 `json:"credit"`
-	Password  string  `json:"password"`
-}
-
 type Metadata struct {
 	CreatedDate  time.Time
 	LastModified time.Time
@@ -24,10 +15,6 @@ type Expense struct {
 	Payer     User
 	Recurrent bool
 	Metadata
-}
-
-func (u *User) Add(amount float64) {
-	u.Credit += amount
 }
 
 func (g *Group) AddExpense(amount float64, currency string, user *User, recurrent bool) *Expense {
